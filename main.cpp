@@ -8,7 +8,7 @@ using namespace std;
 // forward declarations
 void print_tree(node *tree);
 bool process_node(string new_node, node*& tree);
-bool find_node(node *tree, string w);
+void find_node(node *tree, string w);
 
 int main() {
   node* root = nullptr; // start with an empty tree
@@ -46,9 +46,7 @@ int main() {
   while (cin.eof() == false){
     cout << "Please enter the word you wish to check:" << endl;
     cin >> checkword;
-    if(!find_node(root, checkword)){
-      cout << "The word \"" << checkword << "\" was not found." << endl;
-    }
+    find_node(root, checkword);  
   }
 
   
@@ -86,10 +84,8 @@ void print_tree(node *tree) {
   }
 }
 
-bool find_node(node *tree, string w) {
-  bool found = false;
-  if (tree != nullptr) {
-    found = find_node(tree->before, w);
+//Prints the word count if found
+void find_node(node *tree, string w) {
     if(*tree == w){
       if (tree->count==1){
         cout << "The word \"" << w << "\" was found once." << endl << endl;
@@ -98,12 +94,15 @@ bool find_node(node *tree, string w) {
       } else {
         cout << "The word \"" << w << "\" was found " << tree->count << " times." << endl << endl;
         }
-      found = true;
+      } else if ((*tree>w)&&(tree->before != nullptr)){
+          find_node(tree->before, w);
+      } else if ((*tree<w)&&(tree->after != nullptr)){
+          find_node(tree->after, w);
       } else {
         //response = false;
-        found = find_node(tree->after, w);
+        cout< < "The word \"" << w << "\" was not found." << endl;
       }
     
   }
-  return found;
+  return 0;
 }
