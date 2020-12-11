@@ -1,6 +1,6 @@
-#include "word.hpp"
+#include "node.hpp"
 
-word::word() {
+node::node() {
 	count = 1;
   before = nullptr;
   after = nullptr;

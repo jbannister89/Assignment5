@@ -1,62 +1,109 @@
 #include <iostream>
 #include <string>
-#include "word.hpp"
+#include <fstream>
+#include "node.hpp"
 
 using namespace std;
 
 // forward declarations
-void print_tree(word *tree);
-bool process_word(string new_word, word*& tree);
+void print_tree(node *tree);
+bool process_node(string new_node, node*& tree);
+bool find_node(node *tree, string w);
 
 int main() {
-  word* root = nullptr; // start with an empty tree
+  node* root = nullptr; // start with an empty tree
 
-  int wordcount = 0; // optional
-  int individual_word_count = 0; // optional
+  int nodecount = 0; // optional
+  int individual_node_count = 0; // optional
+  
+  //Initial file entry
+  bool filexists = false;
+  string filename, checkword;
+  string t_node;
+  ifstream bookfile; 
 
-  while (cin.eof() == false) {
-    string t_word;
-    cin >> t_word;
-    if (cin.fail() == false) {
-			wordcount++;
-      if (process_word(t_word, root)) {
-      	individual_word_count++;
+  while (!filexists){
+    cout << "Please enter the name of the book file:" << endl;
+    cin >> filename;
+    bookfile.open(filename);
+    if(bookfile.is_open()){
+      filexists = true;
+    } else {
+      cout << "An error occurred attempting to open the file \"" << filename << "\"." << endl;
+    }
+  }
+  
+  while (bookfile >> t_node) {
+      nodecount++;
+      if (process_node(t_node, root)) {
+      	individual_node_count++;
       }
+  }
+  bookfile.close();
+  
+	cout << "The file \"" << filename << "\" contains " << nodecount << " words of which " << individual_node_count << " are distinct." << endl;
+	//print_tree(root);
+  while (cin.eof() == false){
+    cout << "Please enter the word you wish to check:" << endl;
+    cin >> checkword;
+    if(!find_node(root, checkword)){
+      cout << "The word \"" << checkword << "\" was not found." << endl;
     }
   }
 
-	cout << wordcount << " words, of which " << individual_word_count << " are distinct." << endl;
-	//print_tree(root);
-
+  
+  cout << "Goodbye" << endl;
   return 0; // tell the OS everything is peachy
 }
 
-// returns true if the word is new, false otherwise
-bool process_word(string new_word, word*& tree) {
+// returns true if the node is new, false otherwise
+bool process_node(string new_node, node*& tree) {
 	bool response;
 	if (tree == nullptr) {
-		tree = new word();
-    tree->assign(new_word);
-		response = true; // it is a new word
+    tree = new node();
+    tree->assign(new_node);
+		response = true; // it is a new node
 	} else {
-		if (new_word == *tree) {
+		if (new_node == *tree) {
 			tree->count++;
-			response = false; // it is not a new word
+			response = false; // it is not a new node
 		} else {
-			if (new_word < *tree) {
-				response = process_word(new_word, tree->before);
+			if (new_node < *tree) {
+				response = process_node(new_node, tree->before);
 			} else {
-				response = process_word(new_word, tree->after);
+				response = process_node(new_node, tree->after);
 			}
 		}
 	}
 	return response;
 }
 
-void print_tree(word *tree) {
+void print_tree(node *tree) {
   if (tree != nullptr) {
     print_tree(tree->before);
     cout << "\"" << *tree <<"\" " << tree->count << endl;
     print_tree(tree->after);
   }
+}
+
+bool find_node(node *tree, string w) {
+  bool found = false;
+  if (tree != nullptr) {
+    found = find_node(tree->before, w);
+    if(*tree == w){
+      if (tree->count==1){
+        cout << "The word \"" << w << "\" was found once." << endl << endl;
+      } else if (tree->count==2){
+        cout << "The word \"" << w << "\" was found twice." << endl << endl;
+      } else {
+        cout << "The word \"" << w << "\" was found " << tree->count << " times." << endl << endl;
+        }
+      found = true;
+      } else {
+        //response = false;
+        found = find_node(tree->after, w);
+      }
+    
+  }
+  return found;
 }
