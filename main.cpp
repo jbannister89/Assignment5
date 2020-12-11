@@ -44,7 +44,7 @@ int main() {
 	cout << "The file \"" << filename << "\" contains " << nodecount << " words of which " << individual_node_count << " are distinct." << endl;
 	//print_tree(root);
   cout << "Please enter the word you wish to check:" << endl;
-  
+
   while (cin >> checkword){
     find_node(root, checkword);
     cout << "Please enter the word you wish to check:" << endl;
@@ -88,11 +88,11 @@ void print_tree(node *tree) {
 void find_node(node *tree, string w) {
     if(w == *tree){
       if (tree->count==1){
-        cout << "The word \"" << w << "\" was found once." << endl << endl;
+        cout << "The word \"" << w << "\" was found once." << endl;
       } else if (tree->count==2){
-        cout << "The word \"" << w << "\" was found twice." << endl << endl;
+        cout << "The word \"" << w << "\" was found twice." << endl;
       } else {
-        cout << "The word \"" << w << "\" was found " << tree->count << " times." << endl << endl;
+        cout << "The word \"" << w << "\" was found " << tree->count << " times." << endl;
         }
       } else if ((w < *tree) && (tree->before != nullptr)){
           find_node(tree->before, w);
