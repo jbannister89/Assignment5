@@ -49,7 +49,6 @@ int main() {
     find_node(root, checkword);  
   }
 
-  
   cout << "Goodbye" << endl;
   return 0; // tell the OS everything is peachy
 }
@@ -94,15 +93,13 @@ void find_node(node *tree, string w) {
       } else {
         cout << "The word \"" << w << "\" was found " << tree->count << " times." << endl << endl;
         }
-      } else if ((*tree>w)&&(tree->before != nullptr)){
+      } else if ((*tree > w) && (tree->before != nullptr)){
           find_node(tree->before, w);
-      } else if ((*tree<w)&&(tree->after != nullptr)){
+      } else if ((*tree < w) && (tree->after != nullptr)){
           find_node(tree->after, w);
       } else {
-        //response = false;
-        cout< < "The word \"" << w << "\" was not found." << endl;
+        cout << "The word \"" << w << "\" was not found." << endl;
       }
     
   }
-  return 0;
-}
+
